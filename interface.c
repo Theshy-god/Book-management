@@ -30,22 +30,20 @@ static char *ask_question(const char *question) {
 }
 
 
-static void main_menu() {
-
-	int Initial_selection = 5; //These are the five options you just logged into the interface.
-	int User_selection = 5;
-
+static void main_menu(UserLink *headnode) {
+	int option = 5; //These are the five options you just logged into the interface.
+	int lib_option = 5;
+	int user_option =5;
 	do {
-
-		char * answer = ask_question("\nPlease choose an option:\n1) Register an account\n2) Login\n3) Search for books\n4) Display al books\n5) Quit\nOption: ");
-		Initial_selection = atoi(answer);
+		char * answer = ask_question("\nPlease choose an option:\n1) Register an account\n2) Login\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
+		option = atoi(answer);
 		free(answer);
-		switch (Initial_selection) {
+		switch (option) {
 			case 1:
-				Login_account();
+				Register_account(headnode);
 				break;
 			case 2:
-				Login_account();
+				Login_account(headnode);
 				break;
 			case 3:
 				
@@ -60,15 +58,14 @@ static void main_menu() {
 				printf("Sorry, the option you entered was invalid,please try again.\n");
 		}
 
-	} while (User_selection!= 5);
+	} while (option!= 5);
 
 	return;
 }
 
-void run_interface() {
+int main() {
 
-	main_menu();
-
-
-	return;
+	UserLink* Head =createhead(); 
+	main_menu(Head);
+	return 0;
 }

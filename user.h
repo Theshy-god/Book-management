@@ -10,8 +10,11 @@ typedef struct _UserArray {
 	struct _UserArray* next; // pointer to array (or linked list) of struct Book.
 }UserLink;
 
-int  Check_name(char *usernames);
+UserLink *createhead();
+int  Check_name(UserLink*head);
+int checkname(UserLink *p);
 int Check_password(char *usernames,char *userpasswords);
-void Register_account();
-void Login_account();
+void add_user(User userdata,UserLink *head);
+void Register_account(UserLink* head);
+void Login_account(UserLink *head);
 void Librarian(); 
