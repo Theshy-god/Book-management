@@ -1,11 +1,12 @@
 #include "user.h"
+#include "book_management.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 char *username;
 char *password;
-
+char *remove_title;
 static char *ask_question(const char *question) {
 
 	printf("%s",question);
@@ -46,6 +47,69 @@ UserLink *createhead()//´´½¨Í·½Úµã
 	return Newnode;
 }*/
 
+static void User_menu(BookArray *head) {
+	int user_option =5;
+	do {
+		char * answer = ask_question("\nPlease choose an option:\n1) Borrow a book\n2) Return a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
+		user_option = atoi(answer);
+		free(answer);
+		switch (user_option) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				
+				break;
+			case 4:
+			
+				break;
+			case 5:
+				printf("goodbye\n");
+				break;
+			default:
+				printf("Sorry, the option you entered was invalid,please try again.\n");
+		}
+
+	} while (user_option!= 5);
+
+	return;
+}
+
+static void Lib_menu(BookArray *headnode) {
+	int Lib_option =5;
+	Book book;
+	BookArray *test;
+	do {
+		char * answer = ask_question("\nPlease choose an option:\n1) Add a book\n2) Remove a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
+		Lib_option = atoi(answer);
+		free(answer);
+		switch (Lib_option) {
+			case 1:
+				add_book(book,headnode);
+				break;
+			case 2:
+				remove_book(book,headnode);
+				 break;
+			case 3:
+				
+				break;
+			case 4:
+				Displaybook(headnode);
+				break;
+			case 5:
+				printf("goodbye\n");
+				break;
+			default:
+				printf("Sorry, the option you entered was invalid,please try again.\n");
+		}
+
+	} while (Lib_option!= 5);
+
+	return;
+}
+
+
 int  Check_name(UserLink *head)//0ÊÇÏµÍ³Ã»ÓĞÕâ¸öÃû×Ö¿ÉÒÔ×¢²á£¬1ÊÇÃû×Ö´æÔÚ²»ÄÜ×¢²á£» 
 {
 	UserLink *find;//qr is front pointer!
@@ -66,7 +130,7 @@ int  Check_name(UserLink *head)//0ÊÇÏµÍ³Ã»ÓĞÕâ¸öÃû×Ö¿ÉÒÔ×¢²á£¬1ÊÇÃû×Ö´æÔÚ²»ÄÜ×¢²
 
 
 int Check_Password(UserLink *head )//0ÊÇ³É¹¦
-{
+{ 
 	UserLink *findpass;//qr is front pointer!
 	findpass = head->next;
 	while(findpass)
@@ -82,6 +146,7 @@ int Check_Password(UserLink *head )//0ÊÇ³É¹¦
 
 void add_user(User userdata,UserLink *head)
 {
+
 	//UserLink *Newnode=(UserLink*)malloc(sizeof(UserLink)); 
 	//Newnode->next = NULL;
 	UserLink *pmove=head;
@@ -111,17 +176,23 @@ void Register_account(UserLink *head)
 	User userdata;	
 	username= ask_question("Please enter your username:");
 	password= ask_question("Please enter your password:");
+	while(strcmp(username,"librarian") == 0 &&strcmp(password,"librarian") == 0)//½øÈëÍ¼Êé¹ÜÀíÔ±½çÃæ
+	{
+	  printf("Sorry,the username has already exists. Please try it again!\n");
+	  return;
+}
 	if(Check_name(head) == 1)
 	{
-		printf("sorry!failed in registed!");
+		printf("sorry!failed in registed!\n");
 	}
-	else{
+	else
+	{
 	add_user(userdata,head);
-	printf("Register successful!");
+	printf("Register successful!\n");
 }
 }
 
-void Login_account(UserLink *head)
+void Login_account(BookArray *headnode,UserLink *head)
 {
 	User userdata;
 	UserLink *ppmove=head;
@@ -131,7 +202,8 @@ void Login_account(UserLink *head)
 	char *libpassword = "librarian"; 
 	if(strcmp(username,libname) == 0 &&strcmp(password,libpassword) == 0)//½øÈëÍ¼Êé¹ÜÀíÔ±½çÃæ
 	{
-	  printf("Librarian menu");
+	  printf("Librarian menu\n");
+	  Lib_menu(headnode);
 }
 	else//½øÈëÓÃ»§½çÃæ 
 	{
@@ -140,21 +212,23 @@ void Login_account(UserLink *head)
 		ppmove=ppmove->next;
     if(Check_name(head) == 0)
 	{
-		printf("Sorry,no registration!");
+		printf("Sorry,no registration!\n");
 		break;
 	}
 }
 	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) !=0)//ÓÃ»§Ãû¶Ô£¬ÃÜÂë²»¶Ô£» 
 	{
-		printf("Sorry! Wrong password!");
+		printf("Sorry! Wrong password!\n");
 	}
 	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) ==0) //ÓÃ»§ÃûºÍÃÜÂë¶¼¶ÔµÄÊ±ºò 
 	{
-		printf("successful login!");
+		printf("successful login!\n");
+		User_menu(headnode);
 	}
 	
 }
 }
+
 		/*else if(Check_Password(name,password) == 0 )
 		{
 			printf("Sorry,wrong password.Please try it again!\n");

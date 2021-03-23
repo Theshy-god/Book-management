@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include "book_management.h"
 typedef struct _user {
 		char *username; //register username
 		char *password; //register password
@@ -16,5 +16,5 @@ int checkname(UserLink *p);
 int Check_password(char *usernames,char *userpasswords);
 void add_user(User userdata,UserLink *head);
 void Register_account(UserLink* head);
-void Login_account(UserLink *head);
+void Login_account(BookArray *headnode,UserLink *head);
 void Librarian(); 

@@ -28,9 +28,41 @@ static char *ask_question(const char *question) {
 
 	return answer;
 }
+static void Lib_menu(BookArray *headnode) {
+	int Lib_option =5;
+	Book book;
+	BookArray *test;
+	do {
+		char * answer = ask_question("\nPlease choose an option:\n1) Add a book\n2) Remove a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
+		Lib_option = atoi(answer);
+		free(answer);
+		switch (Lib_option) {
+			case 1:
+				add_book(book,headnode);
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				Displaybook(headnode);
+				break;
+			case 5:
+				printf("goodbye\n");
+				break;
+			default:
+				printf("Sorry, the option you entered was invalid,please try again.\n");
+		}
+
+	} while (Lib_option!= 5);
+
+	return;
+}
 
 
-static void main_menu(UserLink *headnode) {
+
+
+static void main_menu(BookArray *headnode,UserLink *head) {
 	int option = 5; //These are the five options you just logged into the interface.
 	int lib_option = 5;
 	int user_option =5;
@@ -40,19 +72,19 @@ static void main_menu(UserLink *headnode) {
 		free(answer);
 		switch (option) {
 			case 1:
-				Register_account(headnode);
+				Register_account(head);
 				break;
 			case 2:
-				Login_account(headnode);
+				Login_account(headnode,head);
 				break;
 			case 3:
 				
 				break;
 			case 4:
-			
+				Displaybook(headnode);
 				break;
 			case 5:
-				printf("goodbye");
+				printf("goodbye\n");
 				break;
 			default:
 				printf("Sorry, the option you entered was invalid,please try again.\n");
@@ -64,8 +96,22 @@ static void main_menu(UserLink *headnode) {
 }
 
 int main() {
-
+	Book A1 = {
+		"aa","bb",2020,90
+	};
+	Book A2 = {
+		"cc","dd",2020,90
+	};
+	Book A3 = {
+		"ee","ff",2020,90
+	};
+	//system("color 5F");
+	BookArray* Headnode = createheadnode(); 
 	UserLink* Head =createhead(); 
-	main_menu(Head);
+//	add_book(A1,Headnode);
+//	add_book(A2,Headnode);
+ // add_book(A3,Headnode);
+	//Lib_menu(Headnode); 
+	main_menu(Headnode,Head);
 	return 0;
 }

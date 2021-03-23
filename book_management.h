@@ -11,11 +11,11 @@
 
 
 typedef struct _Book {
-	    unsigned int id; //Book ID
+	     int id; //Book ID
 		char *title; //book title
 		char *authors; //comma separated list of authors
-		unsigned int year; // year of publication
-		unsigned int copies; //number of copies the library has
+		 int year; // year of publication
+		 int copies; //number of copies the library has
 }Book;
 
 typedef struct _BookArray {
@@ -24,9 +24,9 @@ typedef struct _BookArray {
 	 Book book;//the books that will be added.
 }BookArray;
 
-	
-
-
+void Displaybook(BookArray *headnode);
+BookArray *createheadnode();
+BookArray *createnode(Book books);
 //saves the database of books in the specified file
 //returns 0 if books were stored correctly, or an error code otherwise
 int store_books(FILE *file);
@@ -39,7 +39,8 @@ int load_books(FILE *file);
 
 //adds a book to the ones available to the library
 //returns 0 if the book could be added, or an error code otherwise
-int add_book(Book book,BookArray *head);
+//int add_book(Book book,	BookArray *head);
+int  add_book(Book book,BookArray *headnode2);
 
 //removes a book from the library
 //returns 0 if the book could be successfully removed, or an error code otherwise.
