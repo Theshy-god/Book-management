@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-char *title;
-char *authors;
-int year;
-int copies; 
+char *search_title;
+char *search_author;
+int search_year;
+int search_copies; 
 
 BookArray *createheadnode()//创建头节点 
 {
@@ -72,27 +72,23 @@ int add_book(Book book,BookArray *headnode2)//add the book!
 	//headnode->next=Newnode;
 //	return 0;
 	//BookArray *pmove=headnode2;
+	BookArray *pmove = headnode2;
+	/*while(pmove->next!=NULL)
+	{
+		
+		if(strcmp(pmove->book.title,book.title) == 0 && strcmp(pmove->book.authors,book.authors) == 0)
+		{
+		pmove->book.copies += book.copies;
+		return 0;
+	}
+		pmove=pmove->next;
+	}
+	pmove = headnode2;*/
 	BookArray *Newnode =(BookArray*)malloc(sizeof(BookArray));
-//	Newnode->book=book;
-//	Newnode->next=NULL;
-	//headnode2 -> next = Newnode;
 	Newnode -> book = book;
 //	Newnode -> book.copies = 300; 
 	Newnode -> next = NULL; 
-	Newnode->book.id=atoi(ask_question("Enter the id of the book you wish to add:"));
-	Newnode->book.title=ask_question("Enter the title of the book you wish to add:");
-	Newnode->book.authors=ask_question("Enter the author of the book you wish to add:");
-	Newnode->book.year=atoi(ask_question("Enter the year that the book you wish to add was released:"));
-	Newnode->book.copies=atoi(ask_question("Enter the number of copies of the book you wish to add:"));
-	BookArray *pmove = headnode2;
-	/*if (pmove->next != NULL)
-	{
-		pmove= pmove->next;
-	}
-	if(pmove->next==NULL){
-		pmove->next = Newnode;//此时Newnode成为链表的最后一个结点 要让他的next指向0； 
-	}*/
-/*	if(headnode2->next != NULL && pmove->next != NULL)
+	while(headnode2 != NULL && pmove->next != NULL)
 	{
 		pmove=pmove->next;
 	}
@@ -100,19 +96,15 @@ int add_book(Book book,BookArray *headnode2)//add the book!
 	{
 		headnode2->next=Newnode;
 	}
-	if(headnode2->next != NULL && pmove->next == NULL)
+	if(headnode2->next != NULL)
 	{
 		pmove->next =Newnode;
-	}*/
-/*	if(strcmp(Newnode->book.title,book.title == 0) ||strcmp(Newnode->book.year,book.year) == 0 ||strcmp(Newnode->book.authors,book.authors) == 0) 
-	{
-		book.copies += Newnode->book.copies;
-		
-	}*/
-    Newnode->next=headnode2->next;
-	headnode2->next=Newnode;
-	printf("Book was successfully added!\n");
-	return 1;
+	}
+	headnode2->length += 1; 
+    /*Newnode->next=headnode2->next;
+	headnode2->next=Newnode;*/ //前插法  
+	return 0;
+	
 }
 
 
@@ -121,40 +113,43 @@ int remove_book(Book book,BookArray *head)
 	BookArray *qr,*q;//qr is front pointer!
 	qr=head;
 	q = head->next;
-	if(head->next = NULL)
+	
+	int remove_id=atoi(ask_question("Please enter the id of the book that you want to remove:"));
+	if(head->next == NULL)
 	{
 		printf("There is no book in this library!\n") ;
 	}
-	if(q->book.title == book.title&&q->book.authors == book.authors&&q->book.year == book.year)
+	while(q)
 	{
+	if(q->book.id == remove_id)
+	{	
 		qr->next = q->next;
-		head->length -= 1;
+		head->length -= 1;	
+		free(q);
+		break;
 	}
 	else
 	{
 		qr = q;
 		q = qr->next;
 	}
-	free(q);
+	}
+	printf("The book with id %i has been deleted!\n",remove_id);
 	return 0;
 }
 
 
 void Displaybook(BookArray *headnode)
 {
-	//headnode1=(BookArray *)malloc(sizeof(BookArray));
-	//headnode1->next=NULL;
-	//if (headnode == NULL)
-//	headnode=createheadnode();
 	if (headnode->next == NULL)
 	{	
 	printf("No books in the library\n");
 		return;
 	}
+	 
 	headnode = headnode -> next;
-//	printf("GGGHGGGGGGGGG");
 	while(headnode !=NULL)
-	{	
+	{
 		printf("%i\t",headnode->book.id);
 		printf("%s\t",headnode->book.title);
 		printf("%s\t",headnode->book.authors);
@@ -162,8 +157,17 @@ void Displaybook(BookArray *headnode)
 		printf("%i\n",headnode->book.copies);
 		headnode=headnode->next;
 } 
-	//printf("UIUIUIUIUIUIUIUIUIUIU");
 }
+
+void ShowFindbook(BookArray *head)
+{
+		printf("%i\t",head->book.id);
+		printf("%s\t",head->book.title);
+		printf("%s\t",head->book.authors);
+		printf("%i\t",head->book.year);
+		printf("%i\n",head->book.copies);
+
+} 
 	
 	
 /*int store_books(FILE *file)
@@ -185,21 +189,24 @@ void Displaybook(BookArray *headnode)
 	printf("Successfully stored!\n");
 }
 */
-BookArray *find_book_by_title (const char *title,BookArray *head)
+BookArray *find_book_by_title (const char *title,BookArray *headNode)
 {
-	BookArray *qr1 = head ->next;
-	while(qr1 != NULL&&qr1->book.title!= title)
+	BookArray *qr1 = headNode->next;
+	while(qr1 != NULL&&strcmp(qr1->book.title,title) != 0)
 	{
 		qr1 = qr1->next;
 	}
 	return qr1;
 	
+	
 }
+
+	
 
 BookArray *find_book_by_author (const char *author,BookArray *head)
 {
 	BookArray *qr2 = head->next;
-	while(qr2 != NULL&&qr2->book.authors!= author)
+	while(qr2 != NULL&&strcmp(qr2->book.authors,author) != 0)
 	{
 		qr2 = qr2->next;
 	}
@@ -210,15 +217,140 @@ BookArray *find_book_by_author (const char *author,BookArray *head)
 BookArray *find_book_by_year (unsigned int year,BookArray *head)
 {
 	BookArray *qr3 = head->next;
-	while(qr3 != NULL&&qr3->book.title!= title)
+	while(qr3 != NULL&&qr3->book.year != year)
 	{
 		qr3 = qr3->next;
 	}
 	return qr3;
 	
 }
- 
- 
- 
 
+
+void Searchbook(BookArray *headnode)
+{
+	int Search_option =5;
+	Book book;
+	do {
+		char * answer = ask_question("\nPlease choose an option:\n1)Find books by title:\n2)Find books by author:\n3)Find books by year:\n4)Back to the previous menu!\nOption: ");
+		Search_option = atoi(answer);
+		free(answer);
+		switch (Search_option) {
+			case 1:
+			Search_title(headnode);
+			break;
+		
+			case 2:
+			Search_author(headnode);
+			break;
+		
+			case 3:
+			Search_year(headnode);
+				break;
+			case 4:
+				break;
+			default:
+				printf("Sorry, the option you entered was invalid,please try again.\n");
+		}
+
+	} while (Search_option!= 4);
+
+	return;
+	
+}
+void Search_title(BookArray *headnode)
+{
+	search_title=ask_question("Please enter the title:");
+	BookArray *p =NULL;//书里面移动的指针 
+	BookArray *pmove=NULL;//新链表移动的指针 
+	BookArray *Newlist =NULL;
+	p=find_book_by_title(search_title,headnode);
+	Newlist=p;
+	pmove=p;
+	while(p != NULL)
+	{
+		p=find_book_by_title(search_title,p);//找到下一个书 
+		if(p==NULL)
+		{
+		pmove->pnext=NULL; 
+		break;
+		}
+		else
+		{
+			pmove->pnext= p;
+            pmove =pmove->pnext;
+            pmove->pnext=NULL;
+            
+        }
+    }
+    while (Newlist != NULL)
+	{
+        ShowFindbook(Newlist);
+        Newlist = Newlist->pnext;
+	 }
+}
+
+void Search_author(BookArray *headnode)
+{
+	search_author=ask_question("Please enter the authors:");
+	BookArray *p =NULL;//书里面移动的指针 
+	BookArray *pmove=NULL;//新链表移动的指针 
+	BookArray *Newlist =NULL;
+	p=find_book_by_author(search_author,headnode);
+	Newlist=p;
+	pmove=p;
+	while(p != NULL)
+	{
+		p=find_book_by_author(search_author,p);//找到下一个书 
+		if(p==NULL)
+		{
+		pmove->pnext=NULL; 
+		break;
+		}
+		else
+		{
+			pmove->pnext= p;
+            pmove =pmove->pnext;
+            pmove->pnext=NULL;
+            
+        }
+    }
+    while (Newlist != NULL)
+	{
+        ShowFindbook(Newlist);
+        Newlist = Newlist->pnext;
+	 }
+ } 
+ 
+void Search_year(BookArray *headnode)
+{
+	search_year=atoi(ask_question("Please enter the year:"));
+	BookArray *p =NULL;//书里面移动的指针 
+	BookArray *pmove=NULL;//新链表移动的指针 
+	BookArray *Newlist =NULL;
+	p=find_book_by_year(search_year,headnode);
+	Newlist=p;
+	pmove=p;
+	while(p != NULL)
+	{
+		p=find_book_by_year(search_year,p);//找到下一个书 
+		if(p==NULL)
+		{
+		pmove->pnext=NULL; 
+		break;
+		}
+		else
+		{
+			pmove->pnext= p;
+            pmove =pmove->pnext;
+            pmove->pnext=NULL;
+            
+        }
+    }
+    while (Newlist != NULL)
+	{
+        ShowFindbook(Newlist);
+        Newlist = Newlist->pnext;
+	 }
+ } 
+ 
 

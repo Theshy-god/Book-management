@@ -20,11 +20,17 @@ typedef struct _Book {
 
 typedef struct _BookArray {
 	 struct _BookArray* next; // pointer to array (or linked list) of struct Book.
+	 struct _BookArray* pnext;
 	 unsigned int length; // number of elements in the (Book*) array 
 	 Book book;//the books that will be added.
 }BookArray;
 
 void Displaybook(BookArray *headnode);
+void ShowFindbook(BookArray *head);
+void Searchbook(BookArray *headnode);
+void Search_title(BookArray *headnode);
+void Search_author(BookArray *headnode);
+void Search_year(BookArray *headnode);
 BookArray *createheadnode();
 BookArray *createnode(Book books);
 //saves the database of books in the specified file
@@ -50,7 +56,7 @@ int remove_book(Book book,BookArray *head);
 //returns a BookArray structure, where the field "array" is a newly allocated array of books, or null if no book with the 
 //provided title can be found. The length of the array is also recorded in the returned structure, with 0 in case
 //array is the null pointer.
-BookArray *find_book_by_title (const char *title,BookArray *head);
+BookArray *find_book_by_title (const char *title,BookArray *headNode);
 
 //finds books with the given authors.
 //returns a BookArray structure, where the field "array" is a newly allocated array of books, or null if no book with the 

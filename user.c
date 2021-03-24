@@ -52,6 +52,7 @@ static void User_menu(BookArray *head) {
 	do {
 		char * answer = ask_question("\nPlease choose an option:\n1) Borrow a book\n2) Return a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
 		user_option = atoi(answer);
+		BookArray *move=head;
 		free(answer);
 		switch (user_option) {
 			case 1:
@@ -59,10 +60,10 @@ static void User_menu(BookArray *head) {
 			case 2:
 				break;
 			case 3:
-				
+				Searchbook(head);
 				break;
 			case 4:
-			
+				Displaybook(head);
 				break;
 			case 5:
 				printf("goodbye\n");
@@ -83,16 +84,23 @@ static void Lib_menu(BookArray *headnode) {
 	do {
 		char * answer = ask_question("\nPlease choose an option:\n1) Add a book\n2) Remove a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
 		Lib_option = atoi(answer);
+		BookArray *move=headnode;
 		free(answer);
 		switch (Lib_option) {
 			case 1:
-				add_book(book,headnode);
+			book.id=atoi(ask_question("Enter the id of the book you wish to add:"));
+			book.title=ask_question("Enter the title of the book you wish to add:");
+			book.authors=ask_question("Enter the author of the book you wish to add:");
+			book.year=atoi(ask_question("Enter the year that the book you wish to add was released:"));
+			book.copies=atoi(ask_question("Enter the number of copies of the book you wish to add:"));
+			add_book(book,headnode);
+			printf("Book was successfully added!\n");
 				break;
 			case 2:
 				remove_book(book,headnode);
 				 break;
 			case 3:
-				
+				Searchbook(headnode);
 				break;
 			case 4:
 				Displaybook(headnode);
@@ -228,17 +236,5 @@ void Login_account(BookArray *headnode,UserLink *head)
 	
 }
 }
-
-		/*else if(Check_Password(name,password) == 0 )
-		{
-			printf("Sorry,wrong password.Please try it again!\n");
-		}
-}
-}
-	/*if(strcmp(UserLink->userdata.username,name ==0) && strcmp(UserLink->userdata.password,password) == 0)
-	{
-		printf("Login successfully!");
-	}
-} */
 
 

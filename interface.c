@@ -28,46 +28,16 @@ static char *ask_question(const char *question) {
 
 	return answer;
 }
-static void Lib_menu(BookArray *headnode) {
-	int Lib_option =5;
-	Book book;
-	BookArray *test;
-	do {
-		char * answer = ask_question("\nPlease choose an option:\n1) Add a book\n2) Remove a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
-		Lib_option = atoi(answer);
-		free(answer);
-		switch (Lib_option) {
-			case 1:
-				add_book(book,headnode);
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				Displaybook(headnode);
-				break;
-			case 5:
-				printf("goodbye\n");
-				break;
-			default:
-				printf("Sorry, the option you entered was invalid,please try again.\n");
-		}
-
-	} while (Lib_option!= 5);
-
-	return;
-}
 
 
 
-
-static void main_menu(BookArray *headnode,UserLink *head) {
+static void main_menu(BookArray *headnode,UserLink *head) {//Ö÷²Ëµ¥ 
 	int option = 5; //These are the five options you just logged into the interface.
 	int lib_option = 5;
 	int user_option =5;
 	do {
 		char * answer = ask_question("\nPlease choose an option:\n1) Register an account\n2) Login\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
+	//	BookArray *move=headnode;
 		option = atoi(answer);
 		free(answer);
 		switch (option) {
@@ -78,7 +48,7 @@ static void main_menu(BookArray *headnode,UserLink *head) {
 				Login_account(headnode,head);
 				break;
 			case 3:
-				
+				Searchbook(headnode);
 				break;
 			case 4:
 				Displaybook(headnode);
@@ -97,21 +67,32 @@ static void main_menu(BookArray *headnode,UserLink *head) {
 
 int main() {
 	Book A1 = {
-		"aa","bb",2020,90
+		1,"Math","Chen",2020,90
 	};
 	Book A2 = {
-		"cc","dd",2020,90
+		2,"Chinese","Liu",2020,90
 	};
 	Book A3 = {
-		"ee","ff",2020,90
+		3,"English","Hu",2020,90
+	};
+		Book A4 = {
+		4,"Math","Chen",2021,90
+	};
+	Book A5 = {
+		5,"Math","Li",2021,90
+	};
+	Book A6 = {
+		6,"Chinese","Wang",2022,90
 	};
 	//system("color 5F");
 	BookArray* Headnode = createheadnode(); 
 	UserLink* Head =createhead(); 
-//	add_book(A1,Headnode);
-//	add_book(A2,Headnode);
- // add_book(A3,Headnode);
-	//Lib_menu(Headnode); 
+	add_book(A1,Headnode);
+	add_book(A2,Headnode);
+ 	add_book(A3,Headnode); 
+ 	add_book(A4,Headnode);
+	add_book(A5,Headnode);
+ 	add_book(A6,Headnode);
 	main_menu(Headnode,Head);
 	return 0;
 }
