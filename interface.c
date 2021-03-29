@@ -51,6 +51,11 @@ static void main_menu(BookArray *headnode,UserLink *head) {//主菜单
 				Searchbook(headnode);
 				break;
 			case 4:
+				printf("ID\t");
+				printf("Title\t\t");
+				printf("Author\t\t");
+				printf("Year\t");
+				printf("Copies\n");
 				Displaybook(headnode);
 				break;
 			case 5:
@@ -67,7 +72,7 @@ static void main_menu(BookArray *headnode,UserLink *head) {//主菜单
 
 int main() {
 	Book A1 = {
-		1,"Math","Chen",2020,90
+		1,"Math","Chen",2020,10
 	};
 	Book A2 = {
 		2,"Chinese","Liu",2020,90
@@ -75,7 +80,7 @@ int main() {
 	Book A3 = {
 		3,"English","Hu",2020,90
 	};
-		Book A4 = {
+	/*	Book A4 = {
 		4,"Math","Chen",2021,90
 	};
 	Book A5 = {
@@ -83,16 +88,21 @@ int main() {
 	};
 	Book A6 = {
 		6,"Chinese","Wang",2022,90
-	};
+	};*/
 	//system("color 5F");
 	BookArray* Headnode = createheadnode(); 
 	UserLink* Head =createhead(); 
+	User userdata;
 	add_book(A1,Headnode);
 	add_book(A2,Headnode);
  	add_book(A3,Headnode); 
- 	add_book(A4,Headnode);
-	add_book(A5,Headnode);
- 	add_book(A6,Headnode);
+ 	//add_book(A4,Headnode);
+	//add_book(A5,Headnode);
+ //	add_book(A6,Headnode);
+ 	load_books(Headnode);
+// 	Load_users(Head);
 	main_menu(Headnode,Head);
+	store_books(Headnode);
+//	Store_users(Head);
 	return 0;
 }

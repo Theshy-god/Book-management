@@ -1,11 +1,12 @@
 #include "book_management.h"
+#include "user.h" 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 char *search_title;
 char *search_author;
 int search_year;
-int search_copies; 
+int borrow_id;
 
 BookArray *createheadnode()//创建头节点 
 {
@@ -86,7 +87,6 @@ int add_book(Book book,BookArray *headnode2)//add the book!
 	pmove = headnode2;*/
 	BookArray *Newnode =(BookArray*)malloc(sizeof(BookArray));
 	Newnode -> book = book;
-//	Newnode -> book.copies = 300; 
 	Newnode -> next = NULL; 
 	while(headnode2 != NULL && pmove->next != NULL)
 	{
@@ -100,9 +100,9 @@ int add_book(Book book,BookArray *headnode2)//add the book!
 	{
 		pmove->next =Newnode;
 	}
-	headnode2->length += 1; 
-    /*Newnode->next=headnode2->next;
-	headnode2->next=Newnode;*/ //前插法  
+	headnode2->length += 1;
+  /*  Newnode->next=headnode2->next;
+	headnode2->next=Newnode;//前插法  */ 
 	return 0;
 	
 }
@@ -151,8 +151,8 @@ void Displaybook(BookArray *headnode)
 	while(headnode !=NULL)
 	{
 		printf("%i\t",headnode->book.id);
-		printf("%s\t",headnode->book.title);
-		printf("%s\t",headnode->book.authors);
+		printf("%s\t\t",headnode->book.title);
+		printf("%s\t\t",headnode->book.authors);
 		printf("%i\t",headnode->book.year);
 		printf("%i\n",headnode->book.copies);
 		headnode=headnode->next;
@@ -162,36 +162,73 @@ void Displaybook(BookArray *headnode)
 void ShowFindbook(BookArray *head)
 {
 		printf("%i\t",head->book.id);
-		printf("%s\t",head->book.title);
-		printf("%s\t",head->book.authors);
+		printf("%s\t\t",head->book.title);
+		printf("%s\t\t",head->book.authors);
 		printf("%i\t",head->book.year);
 		printf("%i\n",head->book.copies);
 
 } 
-	
-	
-/*int store_books(FILE *file)
+
+void ShowBorrowbook(BookArray *head)
 {
-	BookArray*head = createheadnode();
-	file = fopen(".\\book.txt", "r");
-	if (file == NULL) {
-		printf("Failed opening the file.\n");
+		printf("%i\t",head->book.id);
+		printf("%s\t\t",head->book.title);
+		printf("%s\t\t",head->book.authors);
+		printf("%i\n",head->book.year);
+
+} 
+	
+int store_books(BookArray* headnode){
+    FILE*file;
+    BookArray *p = headnode->next;
+    file = fopen("file.txt", "wb");
+    while(p)
+    {
+        fwrite(&(p->book.id), sizeof(int), 1,file);
+        fwrite(p->book.title, 50*sizeof(char), 1,file);
+        fwrite(p->book.authors, 50*sizeof(char), 1,file);
+        fwrite(&(p->book.year), sizeof(int), 1,file);
+        fwrite(&(p->book.copies), sizeof(int), 1,file);
+        p=p->next;
+    }
+    fclose(file);
+    return 0;
+}
+
+int load_books(BookArray* headnode){
+    FILE*file;
+    int a = 0;
+    BookArray* q=headnode;
+    if ((file=fopen("file.txt","rb"))==NULL)
+    {
+        file=fopen("file.txt","wb");
+        fclose(file);
+    }
+    file = fopen("file.txt","rb");
+    while (fread(&a,sizeof(int),1,file)) 
+	{
+        BookArray* p = (BookArray*)malloc(sizeof(BookArray));
+        p->next=NULL;
+        p->book.id = a;
+        p->book.title =(char*)malloc(50*sizeof(char));
+        p->book.authors =(char*)malloc(50*sizeof(char));
+        fread(p->book.title,50*sizeof(char),1,file);
+        fread(p->book.authors,50*sizeof(char),1,file);
+        fread(&(p->book.year), sizeof(int), 1,file);
+        fread(&(p->book.copies), sizeof(int), 1,file);
+        q->next=p;
+        q=p;
+        if(feof(file)) break;
+    }
+    if(headnode->next != NULL) 
+	{
 		return 0;
 	}
-	BookArray* p = head;
-	while (p != NULL)
-	{
-		fwrite(&p->book, sizeof(BookArray), 1, file);
-		p = p->next;
-	}
-
-	fclose(file);
-	printf("Successfully stored!\n");
+    fclose(file);
 }
-*/
-BookArray *find_book_by_title (const char *title,BookArray *headNode)
+BookArray *find_book_by_title (const char *title,BookArray *head)
 {
-	BookArray *qr1 = headNode->next;
+	BookArray *qr1 = head->next;
 	while(qr1 != NULL&&strcmp(qr1->book.title,title) != 0)
 	{
 		qr1 = qr1->next;
@@ -266,6 +303,10 @@ void Search_title(BookArray *headnode)
 	p=find_book_by_title(search_title,headnode);
 	Newlist=p;
 	pmove=p;
+		if( p == NULL)
+	{
+		printf("Invalid Input!\n");
+	}
 	while(p != NULL)
 	{
 		p=find_book_by_title(search_title,p);//找到下一个书 
@@ -298,6 +339,10 @@ void Search_author(BookArray *headnode)
 	p=find_book_by_author(search_author,headnode);
 	Newlist=p;
 	pmove=p;
+		if( p == NULL)
+	{
+		printf("Invalid Input!\n");
+	}
 	while(p != NULL)
 	{
 		p=find_book_by_author(search_author,p);//找到下一个书 
@@ -330,6 +375,10 @@ void Search_year(BookArray *headnode)
 	p=find_book_by_year(search_year,headnode);
 	Newlist=p;
 	pmove=p;
+	if( p == NULL)
+	{
+		printf("Invalid Input!\n");
+	}
 	while(p != NULL)
 	{
 		p=find_book_by_year(search_year,p);//找到下一个书 
@@ -353,4 +402,97 @@ void Search_year(BookArray *headnode)
 	 }
  } 
  
+ BookArray *find_book_by_id (unsigned int id,BookArray *head)
+{
+	BookArray *qr4 = head->next;
+	while(qr4 != NULL&&qr4->book.id != id)
+	{
+		qr4 = qr4->next;
+	}
+	return qr4;
+	
+}
+
+void Borrow(UserLink *headNode,BookArray *headnode)
+{
+	
+	Displaybook(headnode);
+	BookArray *p =NULL;
+	int i =0;
+	int s = 0;
+	int borrow_id=atoi(ask_question("Please enter the id of the book that you want to borrow:"));
+	p=find_book_by_id(borrow_id,headnode);
+	if(p == NULL)
+	{
+		printf("Invalid Input!\n");
+		return;
+	}
+	else
+	{
+	for( i=0;i< headNode->userdata.number;i++)
+	{
+		if(headNode->userdata.borrow[i] == p->book.id)
+		{
+			printf("Sorry,you already have a copy of this book on loan\n");
+			return;
+		}
+	}
+	if(p->book.copies > 0 &&  headNode->userdata.number < 10)
+	{
+        p->book.copies--;
+        headNode->userdata.borrow[headNode->userdata.number] = p->book.id;
+      //  headNode->userdata.books.id = p->book.id;
+        headNode->userdata.number   ++;
+        printf("Borrowed succeeded. \n");
+    }
+	else
+	{
+        printf("Sorry, you can not borrow this book.\n");
+    }
+
+}
+}
+void Return_book(UserLink *find,BookArray *headnode)
+{
+	int n = 0;
+    int i = 0;
+    int j =0;
+    int s = 0;
+    BookArray *pi = NULL;
+    BookArray *show = NULL;
+    printf("\nThe books you have borrowed: \n");
+    for(n=0;n< find->userdata.number;n++)
+	{
+        show=find_book_by_id(find->userdata.borrow[n],headnode);
+        ShowBorrowbook(show);
+    }
+    
+    n=0;
+    int answer = atoi(ask_question("\nThe id of book you want to return: "));
+   	pi =find_book_by_id(answer,headnode);
+	while(n<find->userdata.number)
+	{
+        if(find->userdata.borrow[n] == answer)
+		 {    
+        	for(j=n;j <= find->userdata.number;j++)
+        	{
+        		find->userdata.borrow[j] = find->userdata.borrow[j+1];
+			}
+			s=1;
+            find->userdata.number --;
+            pi->book.copies ++;
+            break;
+        }
+        
+    n++;   
+    }
+    if(s==1)
+    {
+    	printf("Successfully returned!\n");
+	}
+	else{
+		printf("Invalid Key\n");
+	}
+}
+
 

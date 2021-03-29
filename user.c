@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 char *username;
 char *password;
 char *remove_title;
@@ -39,16 +38,24 @@ UserLink *createhead()//创建头节点
 	return head;	
 }
 
-/*UserLink *createuser(User userdata)
+UserLink *createuser(User userdata)
 {
 	UserLink *Newnode =(UserLink*)malloc(sizeof(UserLink));
 	Newnode->userdata=userdata;
 	Newnode->next=NULL;
 	return Newnode;
-}*/
+}
 
-static void User_menu(BookArray *head) {
+static void User_menu(char *username,BookArray *head,UserLink *headNode) {
 	int user_option =5;
+	UserLink* u = headNode;
+	while(u){
+		
+		if(strcmp(u->userdata.username, username) == 0) 
+		break;
+		u = u->next;
+	}
+	int id_s = 0;
 	do {
 		char * answer = ask_question("\nPlease choose an option:\n1) Borrow a book\n2) Return a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
 		user_option = atoi(answer);
@@ -56,8 +63,12 @@ static void User_menu(BookArray *head) {
 		free(answer);
 		switch (user_option) {
 			case 1:
+		
+				Borrow(u,head);
+			
 				break;
 			case 2:
+				Return_book(u,head);
 				break;
 			case 3:
 				Searchbook(head);
@@ -79,22 +90,50 @@ static void User_menu(BookArray *head) {
 
 static void Lib_menu(BookArray *headnode) {
 	int Lib_option =5;
+		int flag1,flag2,flag3;
 	Book book;
-	BookArray *test;
 	do {
 		char * answer = ask_question("\nPlease choose an option:\n1) Add a book\n2) Remove a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
 		Lib_option = atoi(answer);
-		BookArray *move=headnode;
+		BookArray *move=headnode->next;
 		free(answer);
 		switch (Lib_option) {
 			case 1:
+				
 			book.id=atoi(ask_question("Enter the id of the book you wish to add:"));
+			/*printf("Enter the id of the book you wish to add:");
+			flag1 = scanf("%d",&book.id);
+			getchar(); */
 			book.title=ask_question("Enter the title of the book you wish to add:");
 			book.authors=ask_question("Enter the author of the book you wish to add:");
 			book.year=atoi(ask_question("Enter the year that the book you wish to add was released:"));
+			//printf("Enter the year that the book you wish to add was released:");
+			//flag2 = scanf("%d",&book.year);
 			book.copies=atoi(ask_question("Enter the number of copies of the book you wish to add:"));
-			add_book(book,headnode);
-			printf("Book was successfully added!\n");
+			//printf("Enter the number of copies of the book you wish to add:");
+		//	flag3 = scanf("%d",&book.copies);
+		//	getchar();
+			while(move->book.id != book.id &&move->next != NULL )
+			{
+				move=move->next;
+			}
+			if(book.copies == 0)
+				{
+				printf("invalid copies!\n");
+				break;
+				}
+			if(move->book.id == book.id)
+			{
+				move->book.copies += book.copies;
+				printf("Successfully added a book!\n");
+				break;
+			}
+			else
+			{
+					add_book(book,headnode);
+					printf("Book was successfully added!\n");
+			}
+		
 				break;
 			case 2:
 				remove_book(book,headnode);
@@ -157,11 +196,13 @@ void add_user(User userdata,UserLink *head)
 
 	//UserLink *Newnode=(UserLink*)malloc(sizeof(UserLink)); 
 	//Newnode->next = NULL;
+	int i =0;
 	UserLink *pmove=head;
 	UserLink *Newnode =(UserLink*)malloc(sizeof(UserLink));
 	Newnode->userdata=userdata;
+	Newnode->userdata.number = 0;
 	Newnode->next=NULL;
-	if(head->next != NULL)
+	/*if(head->next != NULL)
 	{
 		pmove=pmove->next;
 	}
@@ -172,7 +213,14 @@ void add_user(User userdata,UserLink *head)
 	if(pmove->next==NULL)
 	{
 		pmove->next =Newnode;
-	}
+	}*/
+	Newnode->next=head->next;
+	head->next=Newnode; //前插法
+	while(i<10)
+	{
+        Newnode->userdata.borrow[i]=0;
+        i++;
+    }
 	Newnode->userdata.username=username;
 	Newnode->userdata.password=password;
 }
@@ -202,12 +250,16 @@ void Register_account(UserLink *head)
 
 void Login_account(BookArray *headnode,UserLink *head)
 {
-	User userdata;
+	
 	UserLink *ppmove=head;
 	username = ask_question("Please enter your username:");
 	password = ask_question("Please enter your password:");
 	char *libname ="librarian";
 	char *libpassword = "librarian"; 
+/*	if(strcmp(username,"sam") == 0 &&strcmp(password,"sam") == 0)//进入图书管理员界面
+	{
+	  User_menu(username,headnode,head);
+}*/
 	if(strcmp(username,libname) == 0 &&strcmp(password,libpassword) == 0)//进入图书管理员界面
 	{
 	  printf("Librarian menu\n");
@@ -221,6 +273,7 @@ void Login_account(BookArray *headnode,UserLink *head)
     if(Check_name(head) == 0)
 	{
 		printf("Sorry,no registration!\n");
+		return;
 		break;
 	}
 }
@@ -231,10 +284,9 @@ void Login_account(BookArray *headnode,UserLink *head)
 	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) ==0) //用户名和密码都对的时候 
 	{
 		printf("successful login!\n");
-		User_menu(headnode);
+		User_menu(username,headnode,head);
 	}
 	
 }
 }
-
 
