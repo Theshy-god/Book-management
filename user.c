@@ -31,7 +31,7 @@ static char *ask_question(const char *question) {
 	return answer;
 }
 
-UserLink *createhead()//´´½¨Í·½Úµã 
+UserLink *createhead()//create the user headnode;
 {
 	UserLink *head = (UserLink *)malloc(sizeof(UserLink));
 	head->next=NULL;
@@ -54,9 +54,10 @@ static void User_menu(char *username,BookArray *head,UserLink *headNode) {
 		if(strcmp(u->userdata.username, username) == 0) 
 		break;
 		u = u->next;
-	}
+	}// to find the user
 	int id_s = 0;
 	do {
+		printf("\n(Logged in as %s...)\n",username);
 		char * answer = ask_question("\nPlease choose an option:\n1) Borrow a book\n2) Return a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
 		user_option = atoi(answer);
 		BookArray *move=head;
@@ -74,6 +75,11 @@ static void User_menu(char *username,BookArray *head,UserLink *headNode) {
 				Searchbook(head);
 				break;
 			case 4:
+				printf("ID\t");
+				printf("Title\t\t");
+				printf("Author\t\t");
+				printf("Year\t");
+				printf("Copies\n");
 				Displaybook(head);
 				break;
 			case 5:
@@ -93,6 +99,7 @@ static void Lib_menu(BookArray *headnode) {
 		int flag1,flag2,flag3;
 	Book book;
 	do {
+		printf("\n(Logged in as librarian)");
 		char * answer = ask_question("\nPlease choose an option:\n1) Add a book\n2) Remove a book\n3) Search for books\n4) Display all books\n5) Quit\nOption: ");
 		Lib_option = atoi(answer);
 		BookArray *move=headnode->next;
@@ -101,28 +108,20 @@ static void Lib_menu(BookArray *headnode) {
 			case 1:
 				
 			book.id=atoi(ask_question("Enter the id of the book you wish to add:"));
-			/*printf("Enter the id of the book you wish to add:");
-			flag1 = scanf("%d",&book.id);
-			getchar(); */
 			book.title=ask_question("Enter the title of the book you wish to add:");
 			book.authors=ask_question("Enter the author of the book you wish to add:");
 			book.year=atoi(ask_question("Enter the year that the book you wish to add was released:"));
-			//printf("Enter the year that the book you wish to add was released:");
-			//flag2 = scanf("%d",&book.year);
 			book.copies=atoi(ask_question("Enter the number of copies of the book you wish to add:"));
-			//printf("Enter the number of copies of the book you wish to add:");
-		//	flag3 = scanf("%d",&book.copies);
-		//	getchar();
 			while(move->book.id != book.id &&move->next != NULL )
 			{
 				move=move->next;
 			}
-			if(book.copies == 0)
+			if(book.copies == 0)//book copies can not be zero.
 				{
 				printf("invalid copies!\n");
 				break;
 				}
-			if(move->book.id == book.id)
+			if(move->book.id == book.id) // if the id is same,just add the number of book copies.
 			{
 				move->book.copies += book.copies;
 				printf("Successfully added a book!\n");
@@ -142,6 +141,11 @@ static void Lib_menu(BookArray *headnode) {
 				Searchbook(headnode);
 				break;
 			case 4:
+				printf("ID\t");
+				printf("Title\t\t");
+				printf("Author\t\t");
+				printf("Year\t");
+				printf("Copies\n");
 				Displaybook(headnode);
 				break;
 			case 5:
@@ -157,17 +161,17 @@ static void Lib_menu(BookArray *headnode) {
 }
 
 
-int  Check_name(UserLink *head)//0ÊÇÏµÍ³Ã»ÓÐÕâ¸öÃû×Ö¿ÉÒÔ×¢²á£¬1ÊÇÃû×Ö´æÔÚ²»ÄÜ×¢²á£» 
+int  Check_name(UserLink *head)
 {
 	UserLink *find;//qr is front pointer!
 	find = head->next;
 	while(find)
 {
-	if(find == NULL)//·µ»Ø0ÊÇÖ¸Ã»ÓÐÃû×ÖÃ»ÓÐ×¢²á¹ý 
+	if(find == NULL)//return 0 means never registe.
 	{
 		return 0;
 	}
-	if(strcmp(find->userdata.username,username) == 0)//ÓÐ×¢²á¹ý 
+	if(strcmp(find->userdata.username,username) == 0)//It means the username has already regiested.
 	{
 		return 1;
     }
@@ -176,7 +180,7 @@ int  Check_name(UserLink *head)//0ÊÇÏµÍ³Ã»ÓÐÕâ¸öÃû×Ö¿ÉÒÔ×¢²á£¬1ÊÇÃû×Ö´æÔÚ²»ÄÜ×¢²
 }
 
 
-int Check_Password(UserLink *head )//0ÊÇ³É¹¦
+int Check_Password(UserLink *head )//0 means successful!
 { 
 	UserLink *findpass;//qr is front pointer!
 	findpass = head->next;
@@ -191,31 +195,18 @@ int Check_Password(UserLink *head )//0ÊÇ³É¹¦
 }
 }
 
-void add_user(User userdata,UserLink *head)
+void add_user(UserLink *head)
 {
 
 	//UserLink *Newnode=(UserLink*)malloc(sizeof(UserLink)); 
 	//Newnode->next = NULL;
 	int i =0;
-	UserLink *pmove=head;
 	UserLink *Newnode =(UserLink*)malloc(sizeof(UserLink));
-	Newnode->userdata=userdata;
+//	Newnode->userdata=userdata;
 	Newnode->userdata.number = 0;
-	Newnode->next=NULL;
-	/*if(head->next != NULL)
-	{
-		pmove=pmove->next;
-	}
-	if(head->next == NULL)
-	{
-		head->next=Newnode;
-	}
-	if(pmove->next==NULL)
-	{
-		pmove->next =Newnode;
-	}*/
+	
 	Newnode->next=head->next;
-	head->next=Newnode; //Ç°²å·¨
+	head->next=Newnode; //Forward interpolation
 	while(i<10)
 	{
         Newnode->userdata.borrow[i]=0;
@@ -243,7 +234,7 @@ void Register_account(UserLink *head)
 	}
 	else
 	{
-	add_user(userdata,head);
+	add_user(head);
 	printf("Register successful!\n");
 }
 }
@@ -256,37 +247,84 @@ void Login_account(BookArray *headnode,UserLink *head)
 	password = ask_question("Please enter your password:");
 	char *libname ="librarian";
 	char *libpassword = "librarian"; 
-/*	if(strcmp(username,"sam") == 0 &&strcmp(password,"sam") == 0)//½øÈëÍ¼Êé¹ÜÀíÔ±½çÃæ
-	{
-	  User_menu(username,headnode,head);
-}*/
-	if(strcmp(username,libname) == 0 &&strcmp(password,libpassword) == 0)//½øÈëÍ¼Êé¹ÜÀíÔ±½çÃæ
+	if(strcmp(username,libname) == 0 &&strcmp(password,libpassword) == 0)//go to the librarian menu!
 	{
 	  printf("Librarian menu\n");
 	  Lib_menu(headnode);
 }
-	else//½øÈëÓÃ»§½çÃæ 
+	else//enter the user menu!
 	{
-		while(strcmp(username,ppmove->userdata.username) != 0 )
+		while(ppmove->next != NULL&&strcmp(username,ppmove->userdata.username) != 0 )
 		{
 		ppmove=ppmove->next;
-    if(Check_name(head) == 0)
+}
+	if(Check_name(head) == 0)
 	{
 		printf("Sorry,no registration!\n");
 		return;
-		break;
 	}
-}
 	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) !=0)//ÓÃ»§Ãû¶Ô£¬ÃÜÂë²»¶Ô£» 
 	{
 		printf("Sorry! Wrong password!\n");
 	}
 	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) ==0) //ÓÃ»§ÃûºÍÃÜÂë¶¼¶ÔµÄÊ±ºò 
 	{
-		printf("successful login!\n");
+		printf("successful login!\n\n");
 		User_menu(username,headnode,head);
 	}
-	
+
 }
+}
+
+int Store_users(UserLink *headnode){
+    FILE *file;
+    UserLink *p = headnode->next;
+    file = fopen("user.txt", "wb");
+    int i = 0;
+    while (p) 
+	{
+        fwrite(&(p->userdata.number), sizeof(int), 1, file);
+        fwrite(p->userdata.username, 50*sizeof(char), 1, file);
+        fwrite(p->userdata.password, 50*sizeof(char), 1, file);
+        while(i < 10)
+		{
+            fwrite(&(p->userdata.borrow[i]), sizeof(int), 1, file);
+            i++; 
+        }
+        p = p->next;
+    }
+    fclose(file);
+    return 0;
+}
+
+
+int Load_users(UserLink *headnode){
+	FILE *fp;
+    UserLink *qn = headnode; //follow the node
+    if ((fp = fopen("user.txt", "rb")) == NULL) {
+        fp = fopen("user.txt", "wb");
+        fclose(fp);
+    }
+    fp = fopen("user.txt", "rb");
+    int a = 0;
+    while (fread(&a, sizeof(int), 1, fp)) {
+        UserLink *pn = (UserLink *) malloc(sizeof(UserLink));
+        pn->userdata.number = a;
+        pn->next = NULL;
+        pn->userdata.username = (char *) malloc(50 * sizeof(char));
+        pn->userdata.password = (char *) malloc(50 * sizeof(char));
+        fread(pn->userdata.username, 50 * sizeof(char), 1, fp);
+        fread(pn->userdata.password, 50 * sizeof(char), 1, fp);
+        int i = 0;
+        for (i = 0; i < 10; i++) {
+
+            fread(&(pn->userdata.borrow[i]), sizeof(int), 1, fp);
+
+        }
+        qn->next = pn;
+        qn = pn;
+    }
+    if (headnode->next != NULL) return 0;
+    fclose(fp);
 }
 

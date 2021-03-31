@@ -92,17 +92,16 @@ int main() {
 	//system("color 5F");
 	BookArray* Headnode = createheadnode(); 
 	UserLink* Head =createhead(); 
-	User userdata;
 	add_book(A1,Headnode);
 	add_book(A2,Headnode);
  	add_book(A3,Headnode); 
  	//add_book(A4,Headnode);
 	//add_book(A5,Headnode);
- //	add_book(A6,Headnode);
+// 	add_book(A6,Headnode);
  	load_books(Headnode);
-// 	Load_users(Head);
+ 	Load_users(Head);
 	main_menu(Headnode,Head);
 	store_books(Headnode);
-//	Store_users(Head);
+	Store_users(Head);
 	return 0;
 }
