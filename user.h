@@ -27,3 +27,4 @@ void Borrow(UserLink *headNode,BookArray *headnode);
 void Return_book(UserLink *find,BookArray *headnode);
 int Store_users(UserLink *headnode);
 int Load_users(UserLink *headnode);
+int check_number(char* str);

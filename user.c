@@ -46,6 +46,21 @@ UserLink *createuser(User userdata)
 	return Newnode;
 }
 
+int check_number(char* str)
+{ 
+	int check = 0;
+    char* name = str;
+    while (check==0 && *name)
+	{
+        if(*name >= '0' && *name <= '9') 
+		{
+			check++;
+	}
+        name++;
+    }
+    return check;
+}
+
 static void User_menu(char *username,BookArray *head,UserLink *headNode) {
 	int user_option =5;
 	UserLink* u = headNode;
@@ -116,9 +131,18 @@ static void Lib_menu(BookArray *headnode) {
 			{
 				move=move->next;
 			}
-			if(book.copies == 0)//book copies can not be zero.
+			
+			if(check_number(book.authors))
+			{
+				printf("Invalid Author names!\n");
+				break;
+		}
+						 
+			
+			
+			if(book.copies == 0 || book.year == 0)//book copies can not be zero.
 				{
-				printf("invalid copies!\n");
+				printf("\ninvalid copies or year!\n");
 				break;
 				}
 			if(move->book.id == book.id) // if the id is same,just add the number of book copies.
@@ -223,12 +247,12 @@ void Register_account(UserLink *head)
 	User userdata;	
 	username= ask_question("Please enter your username:");
 	password= ask_question("Please enter your password:");
-	while(strcmp(username,"librarian") == 0 &&strcmp(password,"librarian") == 0)//进入图书管理员界面
+	while(strcmp(username,"librarian") == 0 &&strcmp(password,"librarian") == 0)//if someone registe the librarian menu 
 	{
 	  printf("Sorry,the username has already exists. Please try it again!\n");
 	  return;
 }
-	if(Check_name(head) == 1)
+	if(Check_name(head) == 1) //check if the username has been registed
 	{
 		printf("sorry!failed in registed!\n");
 	}
@@ -263,11 +287,11 @@ void Login_account(BookArray *headnode,UserLink *head)
 		printf("Sorry,no registration!\n");
 		return;
 	}
-	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) !=0)//用户名对，密码不对； 
+	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) !=0)//correct username,wrong password
 	{
 		printf("Sorry! Wrong password!\n");
 	}
-	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) ==0) //用户名和密码都对的时候 
+	if(strcmp(ppmove->userdata.username,username) ==0&&strcmp(ppmove->userdata.password ,password) ==0) //if the username and password are all correct;
 	{
 		printf("successful login!\n\n");
 		User_menu(username,headnode,head);
